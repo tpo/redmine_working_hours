@@ -52,20 +52,33 @@
   </tr>
   <tr>
     <td>
+      <% this_month = Time.now.month
+         end_of_last_month  = Time.local(Time.now.year, Time.now.month, 1).to_date - 1
+         total_worked_h     = WorkingHours.total_minutes_month(            this_month)/60.0
+         target_h           = Holiday.target_minutes_month(                this_month)/60.0
+         target_remaining_h = WorkingHours.diff_minutes_until_end_of_month(this_month)/60.0
+
+         diff_this_month_h  = (  WorkingHours.diff_minutes_until_day(Date.today)
+	                       - WorkingHours.diff_minutes_until_day(end_of_last_month))/60.0
+         diff_until_now_h   = WorkingHours.diff_minutes_until_day(Date.today - 1)/60.0
+	 diff_prev_month_h  = WorkingHours.diff_minutes_until_day(end_of_last_month).to_date - 1)/60.0
+       %>
       <table class='list'>
         <thead>
           <th><%= l(:field_total) %></th>
           <th><%= l(:field_target) %></th>
           <th><%= l(:label_target_remaining) %></th>
+          <th><%= l(:label_diff_this_month) %></th>
           <th><%= l(:label_diff_until_now) %></th>
           <th><%= l(:label_diff_prev_month) %></th>
         </thead>
         <tr>
-          <td><%= "#{'%.1f' % (WorkingHours.total_minutes_month(Time.now.month)/60.0)}h" %></td>
-          <td><%= "#{'%.1f' % (Holiday.target_minutes_month(Time.now.month)/60.0)}h" %></td>
-          <td><%= "#{'%.1f' % (-WorkingHours.diff_minutes_until_end_of_month(Time.now.month)/60.0)}h" %></td>
-          <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_day(Date.today - 1)/60.0)}h" %></td>
-          <td><%= "#{'%.1f' % (WorkingHours.diff_minutes_until_day(Time.local(Time.now.year, Time.now.month, 1).to_date - 1)/60.0)}h" %></td>
+          <td><%= "#{'%.1f' % total_worked_h     }h" %></td>
+          <td><%= "#{'%.1f' % target_h           }h" %></td>
+          <td><%= "#{'%.1f' % target_remaining_h }h" %></td>
+          <td><%= "#{'%.1f' % diff_this_month_h   }h" %></td>
+          <td><%= "#{'%.1f' % diff_until_now_h   }h" %></td>
+          <td><%= "#{'%.1f' % diff_prev_month_h  }h" %></td>
         </tr>
       </table>
     </td>
